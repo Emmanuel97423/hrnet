@@ -3,12 +3,13 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from '@material-tailwind/react';
 import App from './App.tsx';
+import Home from './components/template/home/index.tsx';
 import './index.css';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />
+    element: <Home />
   }
 ]);
 

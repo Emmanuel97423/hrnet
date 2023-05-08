@@ -1,5 +1,5 @@
 export type InputProps = {
-    label: string;
+    label?: string;
     type?: "text" | "password" | "email" | "number";
     placeholder?: string;
     className?: string;
