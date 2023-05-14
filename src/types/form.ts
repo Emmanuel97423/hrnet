@@ -1,16 +1,10 @@
-export type FormProps = {
-    firstName?: string;
-    lastName?: string;
-    birthDate?: string;
-    startDate?: string;
-    email?: string;
-    adress?:Adress;
-    department?:string;
+import type { InputProps } from "@/types/input"
+import type { Employee } from "@/types/employee"
 
+export type FormProps = {
+    formFields: InputProps[];
+    onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
+    handleOnChange?: (e: React.ChangeEvent<HTMLInputElement>, label:string) => void;
+    formData?:Employee;
 }
-export type Adress = {
-    street?: string;
-    city?: string;
-    zipCode?: string;
-    state?: string;
-}
+

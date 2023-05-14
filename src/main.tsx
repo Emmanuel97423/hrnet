@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from '@material-tailwind/react';
-import App from './App.tsx';
-import Home from './components/template/Home';
+// import App from './App.tsx';
+import Home from './pages/Home/index.tsx';
 import Employees from './pages/Employees/';
 import './index.css';
 
@@ -11,14 +11,12 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <Home />,
-    
-    children: [
-     
-    ]
+
+    children: []
   },
   {
-    path:'/employees',
-    element:<Employees/>
+    path: '/employees',
+    element: <Employees />
   }
 ]);
 

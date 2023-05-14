@@ -1,6 +1,6 @@
 export type InputProps = {
-    label?: string;
-    type?: "text" | "password" | "email" | "number" | "date" ;
+    label: string;
+    type?: string ;
     placeholder?: string;
     className?: string;
     value?: string;
@@ -16,4 +16,10 @@ export type InputProps = {
     title?: string;
     autoComplete?: string;
     autoFocus?: boolean;
+    options?: OptionsArray[];
+}
+
+type OptionsArray = {
+    name:string;
+    abbreviation:string;
 }

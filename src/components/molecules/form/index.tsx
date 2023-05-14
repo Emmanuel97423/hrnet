@@ -1,267 +1,44 @@
-import { FormProps } from '@/types/form';
+import { useContext } from 'react';
+import FormContext from '@/context/FormContext';
+import type { FormProps } from '@/types/form';
 import Input from '@/components/atoms/Input';
-import Select from '@/components/atoms/Select';
 import Button from '@/components/atoms/Button';
 
-const Form: React.FC<FormProps> = () => {
-  const states = [
-    {
-      name: 'Alabama',
-      abbreviation: 'AL'
-    },
-    {
-      name: 'Alaska',
-      abbreviation: 'AK'
-    },
-    {
-      name: 'American Samoa',
-      abbreviation: 'AS'
-    },
-    {
-      name: 'Arizona',
-      abbreviation: 'AZ'
-    },
-    {
-      name: 'Arkansas',
-      abbreviation: 'AR'
-    },
-    {
-      name: 'California',
-      abbreviation: 'CA'
-    },
-    {
-      name: 'Colorado',
-      abbreviation: 'CO'
-    },
-    {
-      name: 'Connecticut',
-      abbreviation: 'CT'
-    },
-    {
-      name: 'Delaware',
-      abbreviation: 'DE'
-    },
-    {
-      name: 'District Of Columbia',
-      abbreviation: 'DC'
-    },
-    {
-      name: 'Federated States Of Micronesia',
-      abbreviation: 'FM'
-    },
-    {
-      name: 'Florida',
-      abbreviation: 'FL'
-    },
-    {
-      name: 'Georgia',
-      abbreviation: 'GA'
-    },
-    {
-      name: 'Guam',
-      abbreviation: 'GU'
-    },
-    {
-      name: 'Hawaii',
-      abbreviation: 'HI'
-    },
-    {
-      name: 'Idaho',
-      abbreviation: 'ID'
-    },
-    {
-      name: 'Illinois',
-      abbreviation: 'IL'
-    },
-    {
-      name: 'Indiana',
-      abbreviation: 'IN'
-    },
-    {
-      name: 'Iowa',
-      abbreviation: 'IA'
-    },
-    {
-      name: 'Kansas',
-      abbreviation: 'KS'
-    },
-    {
-      name: 'Kentucky',
-      abbreviation: 'KY'
-    },
-    {
-      name: 'Louisiana',
-      abbreviation: 'LA'
-    },
-    {
-      name: 'Maine',
-      abbreviation: 'ME'
-    },
-    {
-      name: 'Marshall Islands',
-      abbreviation: 'MH'
-    },
-    {
-      name: 'Maryland',
-      abbreviation: 'MD'
-    },
-    {
-      name: 'Massachusetts',
-      abbreviation: 'MA'
-    },
-    {
-      name: 'Michigan',
-      abbreviation: 'MI'
-    },
-    {
-      name: 'Minnesota',
-      abbreviation: 'MN'
-    },
-    {
-      name: 'Mississippi',
-      abbreviation: 'MS'
-    },
-    {
-      name: 'Missouri',
-      abbreviation: 'MO'
-    },
-    {
-      name: 'Montana',
-      abbreviation: 'MT'
-    },
-    {
-      name: 'Nebraska',
-      abbreviation: 'NE'
-    },
-    {
-      name: 'Nevada',
-      abbreviation: 'NV'
-    },
-    {
-      name: 'New Hampshire',
-      abbreviation: 'NH'
-    },
-    {
-      name: 'New Jersey',
-      abbreviation: 'NJ'
-    },
-    {
-      name: 'New Mexico',
-      abbreviation: 'NM'
-    },
-    {
-      name: 'New York',
-      abbreviation: 'NY'
-    },
-    {
-      name: 'North Carolina',
-      abbreviation: 'NC'
-    },
-    {
-      name: 'North Dakota',
-      abbreviation: 'ND'
-    },
-    {
-      name: 'Northern Mariana Islands',
-      abbreviation: 'MP'
-    },
-    {
-      name: 'Ohio',
-      abbreviation: 'OH'
-    },
-    {
-      name: 'Oklahoma',
-      abbreviation: 'OK'
-    },
-    {
-      name: 'Oregon',
-      abbreviation: 'OR'
-    },
-    {
-      name: 'Palau',
-      abbreviation: 'PW'
-    },
-    {
-      name: 'Pennsylvania',
-      abbreviation: 'PA'
-    },
-    {
-      name: 'Puerto Rico',
-      abbreviation: 'PR'
-    },
-    {
-      name: 'Rhode Island',
-      abbreviation: 'RI'
-    },
-    {
-      name: 'South Carolina',
-      abbreviation: 'SC'
-    },
-    {
-      name: 'South Dakota',
-      abbreviation: 'SD'
-    },
-    {
-      name: 'Tennessee',
-      abbreviation: 'TN'
-    },
-    {
-      name: 'Texas',
-      abbreviation: 'TX'
-    },
-    {
-      name: 'Utah',
-      abbreviation: 'UT'
-    },
-    {
-      name: 'Vermont',
-      abbreviation: 'VT'
-    },
-    {
-      name: 'Virgin Islands',
-      abbreviation: 'VI'
-    },
-    {
-      name: 'Virginia',
-      abbreviation: 'VA'
-    },
-    {
-      name: 'Washington',
-      abbreviation: 'WA'
-    },
-    {
-      name: 'West Virginia',
-      abbreviation: 'WV'
-    },
-    {
-      name: 'Wisconsin',
-      abbreviation: 'WI'
-    },
-    {
-      name: 'Wyoming',
-      abbreviation: 'WY'
-    }
-  ];
+const Form: React.FC<FormProps> = ({
+  formFields,
+  onSubmit
+  // handleOnChange
+}) => {
+  const { handleSubmit } = useContext(FormContext);
+  const fields = formFields.map((field: any, index: number) => (
+    <Input
+      key={index}
+      label={field.label}
+      type={field.type}
+      placeholder={field.placeholder}
+      options={field?.options}
+      // onChange={(e) => {
+      //   handleOnChange(e, field.label);
+      // }}
+    />
+  ));
 
-  const departments = [
-    { name: 'Sales', abbreviation: 'Sales' },
-    { name: 'Marketing', abbreviation: 'Marketing' },
-    { name: 'Engineering', abbreviation: 'Engineering' },
-    { name: 'Human Resources', abbreviation: 'Human Resources' },
-    { name: 'Legal', abbreviation: 'Legal' }
-  ];
   return (
-    <form className="flex flex-col justify-around ">
-      <Input label="FirstName" type="text" placeholder="First name" />
-      <Input label="Lastname" type="text" placeholder="Last Name" />
-      <Input label="Date of Birth" type="date" placeholder="Date of Birth" />
-      <span className="pt-6 pb-4">Address</span>
-      <Input label="Street" type="text" placeholder="Date of Birth" />
-      <Input label="City" type="text" placeholder="Date of Birth" />
-      <Select label="States" options={states} />
-      <Input label="zipcode" type="number" placeholder="Zip Code" />
-      <Select label="Department" options={departments} />
-      <Button text="Submit" color="red" />
+    <form
+      className="flex flex-col justify-around"
+      onSubmit={() => {
+        handleSubmit;
+      }}
+    >
+      {fields}
+      <Button
+        type="submit"
+        text="Submit"
+        color="red"
+        onClick={() => {
+          handleSubmit;
+        }}
+      />
     </form>
   );
 };

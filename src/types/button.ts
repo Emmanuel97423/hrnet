@@ -6,5 +6,6 @@ export type ButtonProps = {
     type?: "button" | "submit" | "reset";
     link?: string;
     onClick?: () => void;
+    onSubmit?:(e: React.FormEvent<HTMLFormElement>) => void;
 
 }
