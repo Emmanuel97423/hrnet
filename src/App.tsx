@@ -1,6 +1,6 @@
 import './App.css';
-import Button from '@/components/atoms/Button';
-import Input from '@/components/atoms/Input';
+import Button from '@/components/ui/common/Button';
+import Input from '@/components/ui/Input';
 
 const App: React.FC = () => {
   return (
