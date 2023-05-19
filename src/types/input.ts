@@ -1,5 +1,5 @@
 export type InputProps = {
-    key: number;
+    
     label: string;
     type?: string ;
     date?: string;

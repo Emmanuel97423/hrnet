@@ -1,4 +1,4 @@
-import { useContext, useCallback } from 'react';
+import { useContext, useCallback, useMemo } from 'react';
 import { Input as InputUI } from '@material-tailwind/react';
 import FormContext from '@/context/FormContext';
 
@@ -7,18 +7,14 @@ import Label from '@/components/ui/common/Label';
 import type { InputProps } from '@/types/input';
 
 const Input: React.FC<InputProps> = ({ label, type, value, ...props }) => {
-  console.log('label:', label);
   const { formData, setFormData, handleOnChange } = useContext(FormContext);
-  console.log('props:', props);
-  const handleInputChange = useCallback(
-    (e: any) => {
-      setFormData({
-        ...formData,
-        [label.toLowerCase().replace(/\s/g, '')]: e.target.value
-      });
-    },
-    [label]
-  );
+  const handleInputChange = (e: any) => {
+    // handleOnChange(e)
+    setFormData({
+      ...formData,
+      [label.toLowerCase().replace(/\s/g, '')]: e.target.value
+    });
+  };
 
   let content;
   if (type === 'date') {
@@ -43,7 +39,7 @@ const Input: React.FC<InputProps> = ({ label, type, value, ...props }) => {
         <select className="p-2" onChange={handleInputChange}>
           <option value="">Select {label}</option>
           {props.options?.map((option) => (
-            <option key={option.abbreviation} value={option.name}>
+            <option key={option.abbreviation} value={option.abbreviation}>
               {option.name}
             </option>
           ))}

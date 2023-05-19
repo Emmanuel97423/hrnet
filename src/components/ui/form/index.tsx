@@ -5,27 +5,26 @@ import Input from '@/components/ui/Input';
 import Button from '@/components/ui/common/Button';
 
 const Form: React.FC<FormProps> = ({ formFields }) => {
-  const { handleSubmit, handleOnChange } = useContext(FormContext);
-  const fields = useMemo<JSX.Element[]>(() => {
-    return formFields.map((field: any, index: number) => (
-      <Input
-        key={index}
-        label={field.label}
-        type={field.type}
-        placeholder={field.placeholder}
-        options={field?.options}
-        // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-        //   handleOnChange(e, field.label)
-        // }
-      />
-    ));
-  }, [formFields]);
+  const { handleSubmit, formData, handleOnChange } = useContext(FormContext);
+  const fields = formFields.map((field: any, index: number) =>
+    useMemo<JSX.Element>(() => {
+      return (
+        <Input
+          key={index}
+          label={field.label}
+          type={field.type}
+          placeholder={field.placeholder}
+          options={field?.options}
+        />
+      );
+    }, [formData])
+  );
 
   return (
     <form
       className="flex flex-col justify-around"
-      onSubmit={() => {
-        handleSubmit;
+      onSubmit={(e) => {
+        handleSubmit(e);
       }}
     >
       {fields}

@@ -7,5 +7,6 @@ export type Employee = {
     street?:string;
     city?:string;
     state?:string;
+    stateCode?:string;
     zipcode?:string;
 }
