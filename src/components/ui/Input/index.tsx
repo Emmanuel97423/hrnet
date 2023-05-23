@@ -1,13 +1,14 @@
-import { useContext, useCallback, useMemo } from 'react';
+import { useContext, lazy, Suspense } from 'react';
 import { Input as InputUI } from '@material-tailwind/react';
+/* @ts-ignore */
+// const InputUI = lazy(() => import('@material-tailwind/react'));
 import FormContext from '@/context/FormContext';
-
-import DateInput from '@/components/ui/DatePicker';
 import Label from '@/components/ui/common/Label';
 import type { InputProps } from '@/types/input';
+const DateInput = lazy(() => import('@/components/ui/DatePicker'));
 
 const Input: React.FC<InputProps> = ({ label, type, value, ...props }) => {
-  const { formData, setFormData, handleOnChange } = useContext(FormContext);
+  const { formData, setFormData } = useContext(FormContext);
   const handleInputChange = (e: any) => {
     // handleOnChange(e)
     setFormData({
@@ -19,17 +20,21 @@ const Input: React.FC<InputProps> = ({ label, type, value, ...props }) => {
   let content;
   if (type === 'date') {
     content = (
-      <div className="my-2">
-        <Label text={label} />
-        <DateInput label={label} />
-      </div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <div className="my-2">
+          <Label text={label} />
+          <DateInput label={label} />
+        </div>
+      </Suspense>
     );
   } else if (type === 'text' || type === 'number') {
     content = (
-      <div className="my-2">
-        <Label text={label} />
-        <InputUI type={type} value={value} onChange={handleInputChange} />
-      </div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <div className="my-2">
+          <Label text={label} />
+          <InputUI type={type} value={value} onChange={handleInputChange} />
+        </div>
+      </Suspense>
     );
   } else if (type === 'select') {
     content = (

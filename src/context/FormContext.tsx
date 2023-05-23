@@ -41,7 +41,7 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
     department: ''
   });
 
-  const [storedValue, saveEmployee, deleteEmployee] = useLocalStorage();
+  const [, saveEmployee] = useLocalStorage();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.stopPropagation();
@@ -49,8 +49,7 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
   };
   const handleOnChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    label: string,
-    date?: string
+    label: string
   ) => {
     e.stopPropagation();
     setFormData({

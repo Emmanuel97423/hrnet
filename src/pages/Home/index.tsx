@@ -21,6 +21,11 @@ const Home: React.FC = () => {
       placeholder: 'Date of Birth'
     },
     {
+      label: 'Start',
+      type: 'date',
+      placeholder: 'Start'
+    },
+    {
       label: 'Street',
       type: 'text',
       placeholder: 'Street'
