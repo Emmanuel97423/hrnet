@@ -1,23 +1,9 @@
-import { useState } from 'react';
-import FormContext from '@/context/FormContext';
-import Navbar from '@/components/molecules/Navbar';
-import Form from '@/components/molecules/form';
-import { saveToStorage } from '@/utils/localStorage';
-import type { Employee } from '@/types/employee';
+import { FormProvider } from '@/context/FormContext';
+import Navbar from '@/components/ui/Navbar';
+import Form from '@/components/ui/form';
 import type { InputProps } from '@/types/input';
 
 const Home: React.FC = () => {
-  const [formData, setFormData] = useState<Employee>({
-    firstname: '',
-    lastname: '',
-    birthday: '',
-    start: '',
-    street: '',
-    city: '',
-    state: '',
-    zipcode: '',
-    department: ''
-  });
   const data: InputProps[] = [
     {
       label: 'First Name',
@@ -33,6 +19,11 @@ const Home: React.FC = () => {
       label: 'Birthday',
       type: 'date',
       placeholder: 'Date of Birth'
+    },
+    {
+      label: 'Start',
+      type: 'date',
+      placeholder: 'Start'
     },
     {
       label: 'Street',
@@ -305,29 +296,14 @@ const Home: React.FC = () => {
       ]
     }
   ];
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.stopPropagation();
-    saveToStorage(formData);
-  };
-  const handleOnChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    label: string
-  ) => {
-    e.stopPropagation();
-    setFormData({
-      ...formData,
-      [label.toLowerCase().replace(/\s/g, '')]: e.target.value
-    });
-  };
+
   return (
-    <FormContext.Provider
-      value={{ formData, setFormData, handleSubmit, handleOnChange }}
-    >
+    <FormProvider>
       <div className="w-screen  flex flex-col justify-start gap-8 items-center p-8">
         <Navbar />
         <Form formFields={data} />
       </div>
-    </FormContext.Provider>
+    </FormProvider>
   );
 };
 
