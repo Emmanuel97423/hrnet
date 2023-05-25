@@ -71,24 +71,36 @@ const Employees: React.FC = () => {
 
       // Set the loading state
       setLoading(true);
+      if (fetchId === fetchIdRef.current) {
+        const startRow = pageSize * pageIndex;
+        const endRow = startRow + pageSize;
+        /* @ts-ignore */
 
+        setData(storedValue.slice(startRow, endRow));
+
+        // Your server could send back total page count.
+        // For now we'll just fake it, too
+        setPageCount(Math.ceil(storedValue.length / pageSize));
+
+        setLoading(false);
+      }
       // We'll even set a delay to simulate a server here
-      setTimeout(() => {
-        // Only update the data if this is the latest fetch
-        if (fetchId === fetchIdRef.current) {
-          const startRow = pageSize * pageIndex;
-          const endRow = startRow + pageSize;
-          /* @ts-ignore */
+      // setTimeout(() => {
+      //   // Only update the data if this is the latest fetch
+      //   if (fetchId === fetchIdRef.current) {
+      //     const startRow = pageSize * pageIndex;
+      //     const endRow = startRow + pageSize;
+      //     /* @ts-ignore */
 
-          setData(storedValue.slice(startRow, endRow));
+      //     setData(storedValue.slice(startRow, endRow));
 
-          // Your server could send back total page count.
-          // For now we'll just fake it, too
-          setPageCount(Math.ceil(storedValue.length / pageSize));
+      //     // Your server could send back total page count.
+      //     // For now we'll just fake it, too
+      //     setPageCount(Math.ceil(storedValue.length / pageSize));
 
-          setLoading(false);
-        }
-      }, 1000);
+      //     setLoading(false);
+      //   }
+      // }, 1000);
     },
     [storedValue]
   );
