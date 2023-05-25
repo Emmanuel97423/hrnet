@@ -2,11 +2,6 @@ import { useMemo, useState, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import Table from '@/components/ui/Table';
-import { Column, useTable, usePagination, rows } from 'react-table';
-import type { Employee } from '@/types/employee';
-import type { TableColumns } from '@/types/table';
-
-type TableOptions = Column<TableColumns>;
 
 const Employees: React.FC = () => {
   const [storedValue] = useLocalStorage();
@@ -57,10 +52,10 @@ const Employees: React.FC = () => {
   const [pageCount, setPageCount] = useState<number>(0);
   const fetchIdRef = useRef(0);
 
-  const dataLocalStorage = useMemo(() => storedValue, [storedValue]);
   /* @ts-ignore */
 
   const fetchData = useCallback(
+    /* @ts-ignore */
     ({ pageSize, pageIndex }) => {
       // This will get called when the table needs new data
       // You could fetch your data from literally anywhere,
@@ -78,29 +73,10 @@ const Employees: React.FC = () => {
 
         setData(storedValue.slice(startRow, endRow));
 
-        // Your server could send back total page count.
-        // For now we'll just fake it, too
         setPageCount(Math.ceil(storedValue.length / pageSize));
 
         setLoading(false);
       }
-      // We'll even set a delay to simulate a server here
-      // setTimeout(() => {
-      //   // Only update the data if this is the latest fetch
-      //   if (fetchId === fetchIdRef.current) {
-      //     const startRow = pageSize * pageIndex;
-      //     const endRow = startRow + pageSize;
-      //     /* @ts-ignore */
-
-      //     setData(storedValue.slice(startRow, endRow));
-
-      //     // Your server could send back total page count.
-      //     // For now we'll just fake it, too
-      //     setPageCount(Math.ceil(storedValue.length / pageSize));
-
-      //     setLoading(false);
-      //   }
-      // }, 1000);
     },
     [storedValue]
   );
@@ -114,6 +90,9 @@ const Employees: React.FC = () => {
         fetchData={fetchData}
         loading={loading}
         pageCount={pageCount}
+        page={function (): void {
+          throw new Error('Function not implemented.');
+        }}
       />
       <div>
         <Link to="/">Home</Link>

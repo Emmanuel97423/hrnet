@@ -1,12 +1,24 @@
-import { useMemo, useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { useTable, Column, useSortBy, usePagination } from 'react-table';
+import Input from '@/components/ui/Input';
+import formContext from '@/context/FormContext';
 import type { Employee } from '@/types/employee';
 
-const Table: React.FC = ({
+interface TableProps {
+  columns: Column[];
+  data: Employee[];
+  fetchData: (props: { pageIndex: number; pageSize: number }) => void;
+  loading: boolean;
+  pageCount: number;
+  page: () => void;
+}
+
+const Table: React.FC<TableProps> = ({
   columns,
   data,
   fetchData,
   loading,
+
   pageCount: controlledPageCount
 }) => {
   const {
@@ -16,23 +28,24 @@ const Table: React.FC = ({
     prepareRow,
     rows,
     page,
-    canPreviousPage,
-    canNextPage,
     pageOptions,
-    pageCount,
-    gotoPage,
+    setPageSize,
     nextPage,
     previousPage,
-    setPageSize,
+    canPreviousPage,
+    canNextPage,
     // Get the state from the instance
     state: { pageIndex, pageSize, sortBy },
     toggleSortBy
-  } = useTable<Employee>(
+  } = useTable(
     {
       columns,
       data,
+
       initialState: {
         pageIndex: 0,
+        /* @ts-ignore */
+
         sortBy: [{ id: columns[0].accessor, desc: true }]
       },
       // Pass our hoisted table state
@@ -47,46 +60,35 @@ const Table: React.FC = ({
 
     usePagination
   );
-
   useEffect(() => {
     fetchData({ pageIndex, pageSize });
   }, [fetchData, pageIndex, pageSize]);
 
-  const handleSort = (column: Column<Employee>) => {
+  const handleSort = (column: any) => {
     const isColumnSorted = sortBy[0]?.id === column.id;
     toggleSortBy(column.id, isColumnSorted ? !sortBy[0]?.desc : true);
   };
   return (
-    <>
-      <pre>
-        <code>
-          {JSON.stringify(
-            {
-              pageIndex,
-              pageSize,
-              pageCount,
-              canNextPage,
-              canPreviousPage
-            },
-            null,
-            2
-          )}
-        </code>
-      </pre>
-      <div>
-        <select
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 25, 50, 100].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-        <span>entries</span>
+    <div>
+      <div className="w-full flex justify-between my-3">
+        <div>
+          <select
+            value={pageSize}
+            onChange={(e) => {
+              setPageSize(Number(e.target.value));
+            }}
+            className="p-2 mr-2"
+          >
+            {[10, 25, 50, 100].map((pageSize) => (
+              <option key={pageSize} value={pageSize}>
+                Show {pageSize}
+              </option>
+            ))}
+          </select>
+          <span>entries</span>
+        </div>
+
+        <Input type="search" label="Search" />
       </div>
       <table {...getTableProps()} style={{ border: ' ' }}>
         <thead>
@@ -128,9 +130,11 @@ const Table: React.FC = ({
             </tr>
           ))}
         </thead>
-        <tbody {...getTableBodyProps()} className="border-black border-y-2">
+        <tbody
+          {...getTableBodyProps()}
+          className="w-full border-black border-t-2"
+        >
           {rows.map((row) => {
-            console.log('row:', row);
             prepareRow(row);
             return (
               <tr className="border-b-2" {...row.getRowProps()}>
@@ -151,25 +155,37 @@ const Table: React.FC = ({
               </tr>
             );
           })}
-          <tr>
-            {loading ? (
-              // Use our custom loading state to show a loading indicator
-              <td>Loading...</td>
-            ) : (
-              <td className="py-2">
-                Showing {pageIndex + 1} to {page.length} of {pageSize} entries
-              </td>
-            )}
-          </tr>
         </tbody>
       </table>
-      <span>
-        Page{' '}
-        <strong>
-          {pageIndex + 1} of {pageOptions.length}
-        </strong>{' '}
-      </span>
-    </>
+      <div className="w-full flex justify-between border-black border-t-2  py-3">
+        <div className="flex-1 flex justify-start">
+          {loading ? (
+            // Use our custom loading state to show a loading indicator
+            <span>Loading...</span>
+          ) : (
+            <span className="py-2 ">
+              Showing {pageIndex + 1} to {page.length} of {pageSize} entries
+            </span>
+          )}
+        </div>
+        <div className="flex-1 flex justify-center">
+          <span>
+            Page{' '}
+            <strong>
+              {pageIndex + 1} of {pageOptions.length}
+            </strong>{' '}
+          </span>
+        </div>
+        <div className="flex-1 flex justify-end">
+          <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+            {'<'}
+          </button>{' '}
+          <button onClick={() => nextPage()} disabled={!canNextPage}>
+            {'>'}
+          </button>{' '}
+        </div>
+      </div>
+    </div>
   );
 };
 

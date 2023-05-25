@@ -14,15 +14,21 @@ interface FormContextProps {
     date?: string
   ) => void;
   saveEmployee: (employee: Employee) => void;
+  search: string;
+  setSearch: (value: string) => void;
+  handleSearchChange: (value: string) => void;
 }
 
 // Création du contexte avec une valeur initiale vide
 const FormContext = createContext<FormContextProps>({
   formData: {},
+  search: '',
   setFormData: () => {},
   handleSubmit: () => {},
   handleOnChange: () => {},
-  saveEmployee: () => {}
+  saveEmployee: () => {},
+  setSearch: () => {},
+  handleSearchChange: () => {}
 });
 
 // Création du provider pour le contexte
@@ -40,6 +46,7 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
     zipcode: '',
     department: ''
   });
+  const [search, setSearch] = useState<string>('');
 
   const [, saveEmployee] = useLocalStorage();
 
@@ -59,12 +66,19 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
     console.log('formData:', formData);
   };
 
+  const handleSearchChange = (value: string) => {
+    console.log('value:', value);
+  };
+
   const contextValue: FormContextProps = {
     formData,
     setFormData,
+    search,
+    setSearch,
     handleSubmit,
     handleOnChange,
-    saveEmployee
+    saveEmployee,
+    handleSearchChange
   };
 
   return (
