@@ -1,15 +1,10 @@
-import { Button as ButtonUI } from '@material-tailwind/react';
 import type { ButtonProps } from '@/types/button';
 
 const Button: React.FC<ButtonProps> = ({ text }) => {
-  // const handleClick = (e: any) => {
-  //   console.log('e:', e);
-  // };
   return (
-    // <ButtonUI className="my-9" onClick={(e: any) => handleClick(e)}>
-    //   {text}
-    // </ButtonUI>
-    <button className="my-9">{text}</button>
+    <button className="my-9 w-full text-white p-2 bg-black border-2 rounded-md  outline-none">
+      {text}
+    </button>
   );
 };
 

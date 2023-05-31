@@ -7,7 +7,7 @@ import type { Employee } from '@/types/employee';
 
 const Form: React.FC<FormProps> = ({ formFields }) => {
   const { addEmployee } = useContext(FormContext);
-  const [employee, setEmployee] = useState<Employee>({});
+  const [employee, setEmployee] = useState<Employee & Record<string, any>>({});
 
   const handleChange = (e: any, label: string) => {
     let name: string = label;
@@ -42,7 +42,7 @@ const Form: React.FC<FormProps> = ({ formFields }) => {
           }}
         />
       );
-    }, [])
+    }, [employee[field.label.toLowerCase().replace(' ', '')]])
   );
 
   return (

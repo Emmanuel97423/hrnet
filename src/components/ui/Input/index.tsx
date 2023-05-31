@@ -1,6 +1,5 @@
-import { useContext, lazy, Suspense } from 'react';
-import { Input as InputUI } from '@material-tailwind/react';
-import { FormContext } from '@/context/FormContext';
+import { lazy, Suspense } from 'react';
+
 import Label from '@/components/ui/common/Label';
 import type { InputProps } from '@/types/input';
 const DateInput = lazy(() => import('@/components/ui/DatePicker'));
@@ -14,27 +13,6 @@ const Input: React.FC<InputProps> = ({
 
   ...props
 }) => {
-  // const { formData, setFormData, setSearch, handleSearchChange } =
-  //   useContext(FormContext);
-  // const handleInputChange = (e: any) => {
-  //   // handleOnChange(e)
-  //   setFormData({
-  //     ...formData,
-  //     [label.toLowerCase().replace(/\s/g, '')]: e.target.value
-  //   });
-  // };
-  // const searchChangeTest = (e: any) => {
-  //   console.log('e:', e.target.value);
-  //   e.preventDefault();
-  //   setSearch(e.target.value);
-  //   handleSearchChange(e.target.value);
-  //   console.log('setSearch:', setSearch);
-  // };
-
-  // const handleChange = (e: any) => {
-  //   console.log('e:', e);
-  // };
-
   let content;
   if (type === 'date') {
     content = (
@@ -54,9 +32,15 @@ const Input: React.FC<InputProps> = ({
   } else if (type === 'text' || type === 'number') {
     content = (
       <Suspense fallback={<div>Loading...</div>}>
-        <div className="my-2">
+        <div className="my-2 flex flex-col ">
           <Label text={label} />
-          <input type={type} name={label} value={value} onChange={onChange} />
+          <input
+            type={type}
+            name={label}
+            value={value}
+            onChange={onChange}
+            className="border-2 border-gray-300 rounded-md p-2 w-full"
+          />
         </div>
       </Suspense>
     );
@@ -65,7 +49,7 @@ const Input: React.FC<InputProps> = ({
       <>
         <Label text={label} />
         <select
-          className="p-2"
+          className="border-2 border-gray-300 rounded-md p-2 w-full"
           name={label.toLocaleLowerCase().replace(' ', '')}
           onChange={onChange}
         >

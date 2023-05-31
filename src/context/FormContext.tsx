@@ -1,4 +1,4 @@
-import { createContext, useReducer, useState } from 'react';
+import { createContext, useReducer } from 'react';
 // import useLocalStorage from '@/hooks/useLocalStorage';
 import { ReactNode } from 'react';
 import type { Employee } from '@/types/employee';

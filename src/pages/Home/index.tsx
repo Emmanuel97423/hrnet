@@ -299,7 +299,7 @@ const Home: React.FC = () => {
   return (
     <div className="w-screen  flex flex-col justify-start gap-8 items-center p-8">
       <Navbar />
-      <Form formFields={data} />;
+      <Form formFields={data} />
     </div>
   );
 };
