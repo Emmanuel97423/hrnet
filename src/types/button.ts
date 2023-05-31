@@ -5,7 +5,7 @@ export type ButtonProps = {
     disabled?: boolean;
     type?: "button" | "submit" | "reset";
     link?: string;
-    onClick?: () => void;
-    onSubmit?:(e: React.FormEvent<HTMLFormElement>) => void;
+    onClick?: (e: any) => void;
+    // onSubmit:(e: React.FormEvent<HTMLFormElement>) => void;
 
 }

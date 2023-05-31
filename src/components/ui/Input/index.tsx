@@ -1,44 +1,46 @@
-import { useContext, lazy, Suspense } from 'react';
-import { Input as InputUI } from '@material-tailwind/react';
-import FormContext from '@/context/FormContext';
+import { lazy, Suspense } from 'react';
+
 import Label from '@/components/ui/common/Label';
 import type { InputProps } from '@/types/input';
 const DateInput = lazy(() => import('@/components/ui/DatePicker'));
 
-const Input: React.FC<InputProps> = ({ label, type, value, ...props }) => {
-  const { formData, setFormData, setSearch, handleSearchChange } =
-    useContext(FormContext);
-  const handleInputChange = (e: any) => {
-    // handleOnChange(e)
-    setFormData({
-      ...formData,
-      [label.toLowerCase().replace(/\s/g, '')]: e.target.value
-    });
-  };
-  const searchChangeTest = (e: any) => {
-    console.log('e:', e.target.value);
-    e.preventDefault();
-    setSearch(e.target.value);
-    handleSearchChange(e.target.value);
-    console.log('setSearch:', setSearch);
-  };
+const Input: React.FC<InputProps> = ({
+  label,
+  name,
+  type,
+  value,
+  onChange,
 
+  ...props
+}) => {
   let content;
   if (type === 'date') {
     content = (
       <Suspense fallback={<div>Loading...</div>}>
         <div className="my-2">
           <Label text={label} />
-          <DateInput label={label} />
+          {/* @ts-ignore */}
+          <DateInput
+            name={label.toLocaleLowerCase().replace('', ' ')}
+            label={label}
+            // @ts-ignore
+            onChange={onChange}
+          />
         </div>
       </Suspense>
     );
   } else if (type === 'text' || type === 'number') {
     content = (
       <Suspense fallback={<div>Loading...</div>}>
-        <div className="my-2">
+        <div className="my-2 flex flex-col ">
           <Label text={label} />
-          <InputUI type={type} value={value} onChange={handleInputChange} />
+          <input
+            type={type}
+            name={label}
+            value={value}
+            onChange={onChange}
+            className="border-2 border-gray-300 rounded-md p-2 w-full"
+          />
         </div>
       </Suspense>
     );
@@ -46,7 +48,11 @@ const Input: React.FC<InputProps> = ({ label, type, value, ...props }) => {
     content = (
       <>
         <Label text={label} />
-        <select className="p-2" onChange={handleInputChange}>
+        <select
+          className="border-2 border-gray-300 rounded-md p-2 w-full"
+          name={label.toLocaleLowerCase().replace(' ', '')}
+          onChange={onChange}
+        >
           <option value="">Select {label}</option>
           {props.options?.map((option) => (
             <option key={option.abbreviation} value={option.abbreviation}>
@@ -63,7 +69,6 @@ const Input: React.FC<InputProps> = ({ label, type, value, ...props }) => {
         <input
           type="search"
           className="border-2 border-black ml-2 outline-none p-1"
-          onChange={searchChangeTest}
         />
       </div>
     );

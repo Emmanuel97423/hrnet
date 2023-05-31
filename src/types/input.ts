@@ -1,12 +1,11 @@
 export type InputProps = {
-    
     label: string;
     type?: string ;
     date?: string;
     placeholder?: string;
     className?: string;
     value?: string;
-    onChange?: (e: any) => void;
+    onChange?: (e?: any, label?:string, date?: string) => void ;
     error?: string;
     name?: string;
     disabled?: boolean;
