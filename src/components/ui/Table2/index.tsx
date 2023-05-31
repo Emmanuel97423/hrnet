@@ -1,75 +1,54 @@
-import { useTable, Column, useSortBy, usePagination } from 'react-table';
+import { useTable, usePagination, Column, useSortBy } from 'react-table';
 import Input from '@/components/ui/Input';
 import type { Employee } from '@/types/employee';
 
 interface TableProps {
   columns: Column[];
   data: Employee[];
-  employees: Employee[];
-  // fetchData: (props: { pageIndex: number; pageSize: number }) => void;
-  loading: boolean;
-  pageCount: number;
-  page: () => void;
 }
 
-const Table: React.FC<TableProps> = ({
-  columns,
-  data,
-  // fetchData,
-  // loading,
-
-  pageCount: controlledPageCount
-}) => {
+const Table2: React.FC<TableProps> = ({ columns, data }) => {
+  // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     prepareRow,
-    rows,
-    page,
-    pageCount,
-    pageOptions,
-    setPageSize,
-    nextPage,
-    previousPage,
+    page, // Instead of using 'rows', we'll use page,
+    // which has only the rows for the active page
+
+    // The rest of these things are super handy, too ;)
     canPreviousPage,
     canNextPage,
-    // Get the state from the instance
+    pageOptions,
+    pageCount,
+    nextPage,
+    previousPage,
+    setPageSize,
     state: { pageIndex, pageSize, sortBy },
     toggleSortBy
   } = useTable(
     {
       columns,
       data,
-
       initialState: {
         pageIndex: 0,
-        /* @ts-ignore */
-
+        // @ts-ignore
         sortBy: [{ id: columns[0].accessor, desc: true }]
-      },
-      // Pass our hoisted table state
-      manualPagination: true, // Tell the usePagination
-      // hook that we'll handle our own data fetching
-      // This means we'll also have to provide our own
-      // pageCount.
-      pageCount: controlledPageCount
+      }
     },
-
     useSortBy,
-
     usePagination
   );
-  // useEffect(() => {
-  //   fetchData({ pageIndex, pageSize });
-  // }, [fetchData, pageIndex, pageSize]);
 
   const handleSort = (column: any) => {
     const isColumnSorted = sortBy[0]?.id === column.id;
     toggleSortBy(column.id, isColumnSorted ? !sortBy[0]?.desc : true);
   };
+
+  // Render the UI for your table
   return (
-    <div>
+    <>
       <pre>
         <code>
           {JSON.stringify(
@@ -105,7 +84,7 @@ const Table: React.FC<TableProps> = ({
 
         <Input type="search" label="Search" />
       </div>
-      <table {...getTableProps()} style={{ border: ' ' }}>
+      <table {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -113,8 +92,6 @@ const Table: React.FC<TableProps> = ({
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   style={{
-                    // borderBottom: 'solid 3px red',
-                    // background: 'aliceblue',
                     color: 'black',
                     fontWeight: 'bold'
                   }}
@@ -152,15 +129,13 @@ const Table: React.FC<TableProps> = ({
           {page.map((row, i) => {
             prepareRow(row);
             return (
-              <tr className="border-b-2" {...row.getRowProps()}>
+              <tr {...row.getRowProps()} className="border-b-2">
                 {row.cells.map((cell) => {
                   return (
                     <td
                       {...cell.getCellProps()}
                       style={{
                         padding: '10px'
-                        // border: 'solid 1px gray'
-                        // background: 'papayawhip'
                       }}
                     >
                       {cell.render('Cell')}
@@ -172,6 +147,10 @@ const Table: React.FC<TableProps> = ({
           })}
         </tbody>
       </table>
+      {/* 
+        Pagination can be built however you'd like. 
+        This is just a very basic UI implementation:
+      */}
       <div className="w-full flex justify-between border-black border-t-2  py-3">
         <div className="flex-1 flex justify-start">
           <span className="py-2 ">
@@ -214,8 +193,8 @@ const Table: React.FC<TableProps> = ({
           </button>{' '}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
-export default Table;
+export default Table2;

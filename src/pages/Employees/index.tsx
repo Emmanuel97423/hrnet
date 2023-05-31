@@ -1,10 +1,18 @@
-import { useMemo, useState, useRef, useCallback } from 'react';
+import {
+  useMemo,
+  useState,
+  useRef,
+  useCallback,
+  useContext,
+  useEffect
+} from 'react';
 import { Link } from 'react-router-dom';
-import useLocalStorage from '@/hooks/useLocalStorage';
+import { FormContext } from '@/context/FormContext';
 import Table from '@/components/ui/Table';
+import Table2 from '@/components/ui/Table2';
 
 const Employees: React.FC = () => {
-  const [storedValue] = useLocalStorage();
+  const { employees } = useContext(FormContext);
 
   const columns = useMemo(
     () => [
@@ -45,55 +53,72 @@ const Employees: React.FC = () => {
         accessor: 'department'
       }
     ],
-    [storedValue]
+    [employees]
   );
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [pageCount, setPageCount] = useState<number>(0);
+  const [pageIndexState, setPageIndexState] = useState<number>(0);
   const fetchIdRef = useRef(0);
 
   /* @ts-ignore */
 
-  const fetchData = useCallback(
-    /* @ts-ignore */
-    ({ pageSize, pageIndex }) => {
-      // This will get called when the table needs new data
-      // You could fetch your data from literally anywhere,
-      // even a server. But for this example, we'll just fake it.
+  const data = useMemo(() => {
+    employees;
+  }, []);
 
-      // Give this fetch an ID
-      const fetchId = ++fetchIdRef.current;
+  // const fetchData = useCallback(
+  //   /* @ts-ignore */
+  //   ({ pageSize, pageIndex }) => {
+  //     console.log('pageIndex:', pageIndex);
+  //     console.log('pageIndexState:', pageIndexState);
 
-      // Set the loading state
-      setLoading(true);
-      if (fetchId === fetchIdRef.current) {
-        const startRow = pageSize * pageIndex;
-        const endRow = startRow + pageSize;
-        /* @ts-ignore */
+  //     setPageIndexState(pageIndex);
+  //     // This will get called when the table needs new data
+  //     // You could fetch your data from literally anywhere,
+  //     // even a server. But for this example, we'll just fake it.
 
-        setData(storedValue.slice(startRow, endRow));
+  //     // Give this fetch an ID
+  //     const fetchId = ++fetchIdRef.current;
+  //     console.log('fetchId:', fetchId);
 
-        setPageCount(Math.ceil(storedValue.length / pageSize));
+  //     // Set the loading state
+  //     setLoading(true);
+  //     if (fetchId === fetchIdRef.current) {
+  //       const startRow = pageSize * pageIndex;
+  //       console.log('startRow:', startRow);
+  //       const endRow = startRow + pageSize;
+  //       console.log('endRow:', endRow);
+  //       /* @ts-ignore */
+  //       setData(employees.slice(startRow, endRow));
 
-        setLoading(false);
-      }
-    },
-    [storedValue]
-  );
+  //       setPageCount(Math.ceil(employees.length / pageSize));
+
+  //       setLoading(false);
+  //     }
+  //   },
+  //   []
+  // );
+
+  // const dataTest = useMemo(() => {
+  //   return data;
+  // }, [fetchData]);
 
   return (
     <div className="w-screen  flex flex-col justify-start gap-8 items-center p-8">
       <h1>Current Employees</h1>
-      <Table
+      <Table2 columns={columns} data={employees} />
+      {/* <Table
         columns={columns}
-        data={data}
-        fetchData={fetchData}
-        loading={loading}
-        pageCount={pageCount}
-        page={function (): void {
-          throw new Error('Function not implemented.');
-        }}
-      />
+        data={employees}
+        // fetchData={fetchData}
+        // loading={loading}
+        // pageCount={pageCount}
+        // page={function (): void {
+        //   throw new Error('Function not implemented.');
+        // }}
+        employees={[]}
+      /> */}
       <div>
         <Link to="/">Home</Link>
       </div>

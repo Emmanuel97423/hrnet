@@ -1,4 +1,3 @@
-import { FormProvider } from '@/context/FormContext';
 import Navbar from '@/components/ui/Navbar';
 import Form from '@/components/ui/form';
 import type { InputProps } from '@/types/input';
@@ -298,12 +297,10 @@ const Home: React.FC = () => {
   ];
 
   return (
-    <FormProvider>
-      <div className="w-screen  flex flex-col justify-start gap-8 items-center p-8">
-        <Navbar />
-        <Form formFields={data} />
-      </div>
-    </FormProvider>
+    <div className="w-screen  flex flex-col justify-start gap-8 items-center p-8">
+      <Navbar />
+      <Form formFields={data} />;
+    </div>
   );
 };
 

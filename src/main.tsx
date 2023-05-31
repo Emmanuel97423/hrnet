@@ -5,6 +5,8 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from '@material-tailwind/react';
 // import App from './App.tsx';
+import { FormProvider } from '@/context/FormContext';
+
 import Home from './pages/Home/index.tsx';
 import Employees from './pages/Employees';
 import './index.css';
@@ -24,8 +26,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <ThemeProvider>
+    <FormProvider>
       <RouterProvider router={router} />
-    </ThemeProvider>
+    </FormProvider>
   </React.StrictMode>
 );
