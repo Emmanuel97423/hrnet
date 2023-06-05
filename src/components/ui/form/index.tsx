@@ -1,9 +1,10 @@
 import { useContext, useMemo, useState } from 'react';
 import { FormContext } from '@/context/FormContext';
-import type { FormProps } from '@/types/form';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/common/Button';
+import { Modal } from 'modal-react-epok974';
 import type { Employee } from '@/types/employee';
+import type { FormProps } from '@/types/form';
 
 const Form: React.FC<FormProps> = ({ formFields }) => {
   const { addEmployee } = useContext(FormContext);
@@ -46,15 +47,20 @@ const Form: React.FC<FormProps> = ({ formFields }) => {
   );
 
   return (
-    <form
-      className="flex flex-col justify-around"
-      onSubmit={(e) => {
-        handleSubmit(e);
-      }}
-    >
-      {fields}
-      <Button type="submit" text="Submit" color="red" />
-    </form>
+    <>
+      <form
+        className="flex flex-col justify-around"
+        onSubmit={(e) => {
+          handleSubmit(e);
+        }}
+      >
+        {fields}
+        <Button type="submit" text="Submit" color="red" />
+        <Modal width="100" height="100" open={false}>
+          Content Modal
+        </Modal>
+      </form>
+    </>
   );
 };
 export default Form;
