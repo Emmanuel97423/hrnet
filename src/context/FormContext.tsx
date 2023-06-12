@@ -15,8 +15,6 @@ const initialState = {
 };
 
 const appReducer = (state: any, action: any) => {
-  console.log('action:', action);
-
   switch (action.type) {
     case 'ADD_EMPLOYEE': {
       return {
@@ -41,7 +39,6 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
   const addEmployee: (employee: Employee) => void | undefined = (
     employee: Employee
   ) => {
-    console.log('employee:', employee);
     dispatch({
       type: 'ADD_EMPLOYEE',
       payload: employee

@@ -8,11 +8,12 @@ import type { FormProps } from '@/types/form';
 
 const Form: React.FC<FormProps> = ({ formFields }) => {
   const { addEmployee } = useContext(FormContext);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const [employee, setEmployee] = useState<Employee & Record<string, any>>({});
 
   const handleChange = (e: any, label: string) => {
     let name: string = label;
-    let value: string;
+    let value: string | React.FormEvent;
     if (label === 'birthday' || label === 'start') {
       value = e;
     } else {
@@ -21,11 +22,26 @@ const Form: React.FC<FormProps> = ({ formFields }) => {
     setEmployee((values) => ({ ...values, [name]: value }));
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     // @ts-ignore
     addEmployee(employee);
+    handleModal(e);
+  };
+
+  const handleCloseModal = (e: any) => {
+    e.preventDefault();
+
+    console.log('e:', e);
+    setOpenModal(false);
+    // code to handle closing the modal
+  };
+
+  const handleModal = (e: any, open: any) => {
+    e.stopPropagation();
+
+    setOpenModal(true);
   };
 
   const fields = formFields.map((field: any, index: number) =>
@@ -55,9 +71,20 @@ const Form: React.FC<FormProps> = ({ formFields }) => {
         }}
       >
         {fields}
-        <Button type="submit" text="Submit" color="red" />
-        <Modal width="100" height="100" open={false}>
-          Content Modal
+        <Button
+          type="submit"
+          text="Submit"
+          color="red"
+          // onClick={(e) => handleModal(e)}
+        />
+        <Modal
+          width="700"
+          height="100"
+          open={openModal}
+          handleCloseModal={handleCloseModal}
+          handleModal={handleModal}
+        >
+          Employee Saved!
         </Modal>
       </form>
     </>
