@@ -10,13 +10,31 @@ interface FormContextProps {
   initialState?: Employee[];
 }
 
-const initialState = {
-  employees: []
+type Action = { type: 'ADD_EMPLOYEE'; payload: Employee };
+type State = {
+  employees: Employee[];
 };
 
-const appReducer = (state: any, action: any) => {
+const employees = localStorage.getItem('employees');
+const storage: Employee[] = employees ? JSON.parse(employees) : [];
+
+let initialState: FormContextProps;
+
+if (storage) {
+  initialState = {
+    employees: storage
+  };
+} else {
+  initialState = {
+    employees: []
+  };
+}
+
+const appReducer = (state: State, action: Action) => {
   switch (action.type) {
     case 'ADD_EMPLOYEE': {
+      const newEmployees: Employee[] = [...state.employees, action.payload];
+      localStorage.setItem('employees', JSON.stringify(newEmployees));
       return {
         ...state,
         employees: [...state.employees, action.payload]
