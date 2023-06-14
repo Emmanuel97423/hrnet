@@ -27,6 +27,7 @@ const Form: React.FC<FormProps> = ({ formFields }) => {
 
     // @ts-ignore
     addEmployee(employee);
+    // @ts-ignore
     handleModal(e);
   };
 
@@ -38,7 +39,7 @@ const Form: React.FC<FormProps> = ({ formFields }) => {
     // code to handle closing the modal
   };
 
-  const handleModal = (e: any, open: any) => {
+  const handleModal = (e: any) => {
     e.stopPropagation();
 
     setOpenModal(true);
