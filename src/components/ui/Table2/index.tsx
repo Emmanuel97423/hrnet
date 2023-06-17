@@ -42,8 +42,8 @@ const GlobalFilter = ({
           setValue(e.target.value);
           onChange(e.target.value);
         }}
-        // placeholder={`${count} records...`}
-        className="p-2 border-3"
+        placeholder={`${count} records...`}
+        className="p-2 border-2 border-black ml-2"
       />
     </span>
   );
