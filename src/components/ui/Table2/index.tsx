@@ -1,4 +1,15 @@
-import { useTable, usePagination, Column, useSortBy } from 'react-table';
+import { useState, useMemo } from 'react';
+import 'regenerator-runtime/runtime';
+import { matchSorter } from 'match-sorter';
+import {
+  useTable,
+  usePagination,
+  Column,
+  useSortBy,
+  useAsyncDebounce,
+  useFilters,
+  useGlobalFilter
+} from 'react-table';
 import Input from '@/components/ui/Input';
 import type { Employee } from '@/types/employee';
 import { memo } from 'react';
@@ -8,13 +19,94 @@ interface TableProps {
   data: Employee[];
 }
 
+// Define a default UI for filtering
+const GlobalFilter = ({
+  preGlobalFilteredRows,
+  globalFilter,
+  setGlobalFilter
+}) => {
+  console.log('preGlobalFilteredRows:', preGlobalFilteredRows);
+
+  const count = preGlobalFilteredRows.length;
+  const [value, setValue] = useState(globalFilter);
+  const onChange = useAsyncDebounce((value) => {
+    setGlobalFilter(value || undefined);
+  }, 200);
+
+  return (
+    <span className="flex items-center">
+      {'Search:'}
+      <input
+        value={value || ''}
+        onChange={(e) => {
+          setValue(e.target.value);
+          onChange(e.target.value);
+        }}
+        placeholder={`${count} records...`}
+        className="p-2 border-2 border-black ml-2"
+      />
+    </span>
+  );
+};
+// Define a default UI for filtering
+const DefaultColumnFilter = ({
+  column: { filterValue, preFilteredRows, setFilter }
+}) => {
+  const count = preFilteredRows.length;
+
+  return (
+    <input
+      value={filterValue || ''}
+      onChange={(e) => {
+        setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
+      }}
+      placeholder={`Search ${count} records...`}
+    />
+  );
+};
+
+const fuzzyTextFilterFn = (rows, id, filterValue) => {
+  return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] });
+};
+// Let the table remove the filter if the string is empty
+fuzzyTextFilterFn.autoRemove = (val) => !val;
+
+// Our table component
 const Table2: React.FC<TableProps> = ({ columns, data }) => {
+  const filterTypes = useMemo(
+    () => ({
+      // Add a new fuzzyTextFilterFn filter type.
+      fuzzyText: fuzzyTextFilterFn,
+      // Or, override the default text filter to use
+      // "startWith"
+      text: (rows, id, filterValue) => {
+        return rows.filter((row) => {
+          const rowValue = row.values[id];
+          return rowValue !== undefined
+            ? String(rowValue)
+                .toLowerCase()
+                .startsWith(String(filterValue).toLowerCase())
+            : true;
+        });
+      }
+    }),
+    []
+  );
+
+  const defaultColumn = useMemo(
+    () => ({
+      // Let's set up our default Filter UI
+      Filter: DefaultColumnFilter
+    }),
+    []
+  );
   // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     prepareRow,
+    state,
     page, // Instead of using 'rows', we'll use page,
     // which has only the rows for the active page
 
@@ -26,23 +118,29 @@ const Table2: React.FC<TableProps> = ({ columns, data }) => {
     previousPage,
     setPageSize,
     state: { pageIndex, pageSize, sortBy },
+    visibleColumns,
+    preGlobalFilteredRows,
+    setGlobalFilter,
     toggleSortBy
   } = useTable(
     {
       columns,
       data,
+      defaultColumn,
+      filterTypes,
       initialState: {
         pageIndex: 0,
         // @ts-ignore
         sortBy: [{ id: columns[0].accessor, desc: true }]
       }
     },
+    useFilters, // useFilters!
+    useGlobalFilter, // useGlobalFilter!
     useSortBy,
     usePagination
   );
 
   const handleSort = (column: any) => {
-    console.log('column:', column);
     const isColumnSorted = sortBy[0]?.id === column.id;
     toggleSortBy(column.id, isColumnSorted ? !sortBy[0]?.desc : true);
   };
@@ -106,7 +204,11 @@ const Table2: React.FC<TableProps> = ({ columns, data }) => {
           <span>entries</span>
         </div>
 
-        <Input type="search" label="Search" />
+        <GlobalFilter
+          preGlobalFilteredRows={preGlobalFilteredRows}
+          globalFilter={state.globalFilter}
+          setGlobalFilter={setGlobalFilter}
+        />
       </div>
       <table {...getTableProps()}>
         <thead>
