@@ -8,19 +8,31 @@ import {
   useSortBy,
   useAsyncDebounce,
   useFilters,
-  useGlobalFilter
+  useGlobalFilter,
+  Row,
+  ColumnInstance
 } from 'react-table';
 import Input from '@/components/ui/Input';
 import type { Employee } from '@/types/employee';
 import { memo } from 'react';
 
 interface TableProps {
-  columns: Column[];
+  columns: Column<any>[];
   data: Employee[];
 }
 
+interface GlobalFilterProps {
+  preGlobalFilteredRows: Array<Row<any>>;
+  globalFilter: any;
+  setGlobalFilter: (value: any) => void;
+}
+
+interface DefaultColumnFilterProps {
+  column: ColumnInstance<any>;
+}
+
 // Define a default UI for filtering
-const GlobalFilter = ({
+const GlobalFilter: React.FC<GlobalFilterProps> = ({
   preGlobalFilteredRows,
   globalFilter,
   setGlobalFilter
@@ -49,7 +61,7 @@ const GlobalFilter = ({
   );
 };
 // Define a default UI for filtering
-const DefaultColumnFilter = ({
+const DefaultColumnFilter: React.FC<DefaultColumnFilterProps> = ({
   column: { filterValue, preFilteredRows, setFilter }
 }) => {
   const count = preFilteredRows.length;
@@ -65,11 +77,15 @@ const DefaultColumnFilter = ({
   );
 };
 
-const fuzzyTextFilterFn = (rows, id, filterValue) => {
+const fuzzyTextFilterFn = (
+  rows: Array<Row<any>>,
+  id: string,
+  filterValue: string
+): Array<Row<any>> => {
   return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] });
 };
 // Let the table remove the filter if the string is empty
-fuzzyTextFilterFn.autoRemove = (val) => !val;
+fuzzyTextFilterFn.autoRemove = (val: string) => !val;
 
 // Our table component
 const Table2: React.FC<TableProps> = ({ columns, data }) => {
@@ -79,7 +95,7 @@ const Table2: React.FC<TableProps> = ({ columns, data }) => {
       fuzzyText: fuzzyTextFilterFn,
       // Or, override the default text filter to use
       // "startWith"
-      text: (rows, id, filterValue) => {
+      text: (rows: Array<Row<any>>, id: string, filterValue: string) => {
         return rows.filter((row) => {
           const rowValue = row.values[id];
           return rowValue !== undefined
@@ -127,6 +143,8 @@ const Table2: React.FC<TableProps> = ({ columns, data }) => {
       columns,
       data,
       defaultColumn,
+      // @ts-ignore
+
       filterTypes,
       initialState: {
         pageIndex: 0,
