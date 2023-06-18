@@ -1,19 +1,44 @@
+/**
+ * @module components/Input
+ * @category Components
+ */
+
 import { lazy, Suspense } from 'react';
 
 import Label from '@/components/ui/common/Label';
 import type { InputProps } from '@/types/input';
+
+// Lazy load DateInput component
 const DateInput = lazy(() => import('@/components/ui/DatePicker'));
 
+/**
+ * Input component
+ *
+ * @component
+ * @param {InputProps} props - Input properties
+ * @param {string} props.label - Label of the input field
+ * @param {string} props.name - Name of the input field
+ * @param {string} props.type - Type of the input field
+ * @param {string} props.value - Value of the input field
+ * @param {(value: any) => void} props.onChange - Function to be called when value is changed
+ *
+ * @example
+ * return <Input label="MyLabel" name="myName" type="text" value="myValue" onChange={myOnChangeFunction} />
+ *
+ * @returns {JSX.Element} Input component JSX
+ */
 const Input: React.FC<InputProps> = ({
   label,
   name,
   type,
   value,
   onChange,
-
   ...props
 }) => {
+  // variable to hold the JSX content based on the type of input
   let content;
+
+  // case for date input
   if (type === 'date') {
     content = (
       <Suspense fallback={<div>Loading...</div>}>
@@ -29,7 +54,9 @@ const Input: React.FC<InputProps> = ({
         </div>
       </Suspense>
     );
-  } else if (type === 'text' || type === 'number') {
+  }
+  // case for text or number input
+  else if (type === 'text' || type === 'number') {
     content = (
       <Suspense fallback={<div>Loading...</div>}>
         <div className="my-2 flex flex-col ">
@@ -44,7 +71,9 @@ const Input: React.FC<InputProps> = ({
         </div>
       </Suspense>
     );
-  } else if (type === 'select') {
+  }
+  // case for select input
+  else if (type === 'select') {
     content = (
       <>
         <Label text={label} />
@@ -62,7 +91,9 @@ const Input: React.FC<InputProps> = ({
         </select>
       </>
     );
-  } else if (type === 'search') {
+  }
+  // case for search input
+  else if (type === 'search') {
     content = (
       <div className="flex items-center ">
         <Label text={label} />:
@@ -73,6 +104,7 @@ const Input: React.FC<InputProps> = ({
       </div>
     );
   }
+
   return <>{content}</>;
 };
 

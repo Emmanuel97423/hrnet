@@ -1,3 +1,9 @@
+/**
+ * Form component
+ *
+ * @module components/Form
+ */
+
 import { useContext, useMemo, useState } from 'react';
 import { FormContext } from '@/context/FormContext';
 import Input from '@/components/ui/Input';
@@ -6,11 +12,26 @@ import { Modal } from 'modal-react-epok974';
 import type { Employee } from '@/types/employee';
 import type { FormProps } from '@/types/form';
 
+/**
+ * Form Component
+ *
+ * @component
+ *
+ * @param {object} formFields - the fields of the form
+ *
+ * @returns {React.Element} - Form component rendered
+ */
 const Form: React.FC<FormProps> = ({ formFields }) => {
   const { addEmployee } = useContext(FormContext);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [employee, setEmployee] = useState<Employee & Record<string, any>>({});
 
+  /**
+   * Handle the change of form inputs
+   *
+   * @param {any} e - event object
+   * @param {string} label - label of the input field
+   */
   const handleChange = (e: any, label: string) => {
     let name: string = label;
     let value: string | React.FormEvent;
@@ -22,29 +43,43 @@ const Form: React.FC<FormProps> = ({ formFields }) => {
     setEmployee((values) => ({ ...values, [name]: value }));
   };
 
+  /**
+   * Handle the submission of the form
+   *
+   * @param {React.FormEvent} e - event object
+   */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     // @ts-ignore
     addEmployee(employee);
     // @ts-ignore
     handleModal(e);
   };
 
+  /**
+   * Handle closing of the modal
+   *
+   * @param {any} e - event object
+   */
   const handleCloseModal = (e: any) => {
     e.preventDefault();
-
     console.log('e:', e);
     setOpenModal(false);
-    // code to handle closing the modal
   };
 
+  /**
+   * Handle opening of the modal
+   *
+   * @param {any} e - event object
+   */
   const handleModal = (e: any) => {
     e.stopPropagation();
-
     setOpenModal(true);
   };
 
+  /**
+   * Create form fields
+   */
   const fields = formFields.map((field: any, index: number) =>
     useMemo<JSX.Element>(() => {
       return (
@@ -72,12 +107,7 @@ const Form: React.FC<FormProps> = ({ formFields }) => {
         }}
       >
         {fields}
-        <Button
-          type="submit"
-          text="Submit"
-          color="red"
-          // onClick={(e) => handleModal(e)}
-        />
+        <Button type="submit" text="Submit" color="red" />
         <Modal
           width="700"
           height="100"

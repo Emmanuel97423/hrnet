@@ -2,6 +2,14 @@ import Navbar from '@/components/ui/Navbar';
 import Form from '@/components/ui/form';
 import type { InputProps } from '@/types/input';
 
+/**
+ * Home component.
+ * Includes the Navbar and a Form with various input fields.
+ *
+ * @component
+ * return <Home />
+ */
+
 const Home: React.FC = () => {
   const data: InputProps[] = [
     {

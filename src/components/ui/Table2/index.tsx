@@ -1,3 +1,8 @@
+/**
+ * @module Table2
+ * @category Components
+ */
+
 import { useState, useMemo } from 'react';
 import 'regenerator-runtime/runtime';
 import { matchSorter } from 'match-sorter';
@@ -12,7 +17,6 @@ import {
   Row,
   ColumnInstance
 } from 'react-table';
-import Input from '@/components/ui/Input';
 import type { Employee } from '@/types/employee';
 import { memo } from 'react';
 
@@ -30,6 +34,18 @@ interface GlobalFilterProps {
 interface DefaultColumnFilterProps {
   column: ColumnInstance<any>;
 }
+
+/**
+ * Default UI for global filtering
+ *
+ * @component
+ * @param {GlobalFilterProps} props - Properties
+ * @param {Array<Row<any>>} props.preGlobalFilteredRows - Rows before global filtering
+ * @param {any} props.globalFilter - Current global filter value
+ * @param {(value: any) => void} props.setGlobalFilter - Function to set global filter value
+ *
+ * @returns {JSX.Element} GlobalFilter component JSX
+ */
 
 // Define a default UI for filtering
 const GlobalFilter: React.FC<GlobalFilterProps> = ({
@@ -60,7 +76,17 @@ const GlobalFilter: React.FC<GlobalFilterProps> = ({
     </span>
   );
 };
-// Define a default UI for filtering
+
+/**
+ * Default UI for column filtering
+ *
+ * @component
+ * @param {DefaultColumnFilterProps} props - Properties
+ * @param {ColumnInstance<any>} props.column - Column instance for filtering
+ *
+ * @returns {JSX.Element} DefaultColumnFilter component JSX
+ */
+
 const DefaultColumnFilter: React.FC<DefaultColumnFilterProps> = ({
   column: { filterValue, preFilteredRows, setFilter }
 }) => {
@@ -87,7 +113,17 @@ const fuzzyTextFilterFn = (
 // Let the table remove the filter if the string is empty
 fuzzyTextFilterFn.autoRemove = (val: string) => !val;
 
-// Our table component
+/**
+ * Table component with filters and pagination
+ *
+ * @component
+ * @param {TableProps} props - Table properties
+ * @param {Column<any>[]} props.columns - Columns of the table
+ * @param {Employee[]} props.data - Data for the table
+ *
+ * @returns {JSX.Element} Table component JSX
+ */
+
 const Table2: React.FC<TableProps> = ({ columns, data }) => {
   const filterTypes = useMemo(
     () => ({
@@ -134,7 +170,6 @@ const Table2: React.FC<TableProps> = ({ columns, data }) => {
     previousPage,
     setPageSize,
     state: { pageIndex, pageSize, sortBy },
-    visibleColumns,
     preGlobalFilteredRows,
     setGlobalFilter,
     toggleSortBy
@@ -277,14 +312,6 @@ const Table2: React.FC<TableProps> = ({ columns, data }) => {
           <span className="py-2 ">
             Showing {page.length} to {data.length} of {pageSize} entries
           </span>
-          {/* {loading ? (
-            // Use our custom loading state to show a loading indicator
-            <span>Loading...</span>
-          ) : (
-            <span className="py-2 ">
-              Showing {pageIndex + 1} to {page.length} of {pageSize} entries
-            </span>
-          )} */}
         </div>
         <div className="flex-1 flex justify-center">
           <span>
