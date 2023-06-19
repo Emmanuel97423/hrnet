@@ -11,6 +11,8 @@ export type Employee = {
     zipcode?:string;
     pageIndex?:number;
     pageSize?:number;
+    fieldName?:string;
+    error?:string
 }
 
 export type EmployeesList = {

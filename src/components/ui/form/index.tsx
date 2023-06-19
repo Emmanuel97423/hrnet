@@ -11,6 +11,7 @@ import Button from '@/components/ui/common/Button';
 import { Modal } from 'modal-react-epok974';
 import type { Employee } from '@/types/employee';
 import type { FormProps } from '@/types/form';
+import * as yup from 'yup';
 
 /**
  * Form Component
@@ -21,10 +22,20 @@ import type { FormProps } from '@/types/form';
  *
  * @returns {React.Element} - Form component rendered
  */
+
 const Form: React.FC<FormProps> = ({ formFields }) => {
   const { addEmployee } = useContext(FormContext);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [employee, setEmployee] = useState<Employee & Record<string, any>>({});
+  // New state for validation errors
+  const [errors, setErrors] = useState({});
+  // Function to set error message and clear it after 3 seconds
+  const setErrorMessage = (path: string, message: string) => {
+    setErrors({ ...errors, [path]: message });
+    setTimeout(() => {
+      setErrors({ ...errors, [path]: '' });
+    }, 3000);
+  };
 
   /**
    * Handle the change of form inputs
@@ -48,12 +59,36 @@ const Form: React.FC<FormProps> = ({ formFields }) => {
    *
    * @param {React.FormEvent} e - event object
    */
-  const handleSubmit = (e: React.FormEvent) => {
+  // Build an object with validation rules for each field
+  const validationRules = [...formFields].reverse().reduce((rules, field) => {
+    const fieldName = field.label.toLowerCase().replace(' ', '');
+
+    return {
+      ...rules,
+      [fieldName]: yup.string().required(`Champs requis`)
+    };
+  }, {});
+
+  // Create validation schema based on formFields
+  let validationSchema = yup.object().shape(validationRules);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // @ts-ignore
-    addEmployee(employee);
-    // @ts-ignore
-    handleModal(e);
+
+    e.preventDefault();
+
+    try {
+      // Try to validate the form data against the schema
+      await validationSchema.validate(employee);
+      // If successful, add employee
+      // @ts-ignore
+      addEmployee(employee);
+      handleModal(e);
+    } catch (err) {
+      // If validation fails, update errors state
+      // @ts-ignore
+      setErrorMessage(err.path, err.message);
+    }
   };
 
   /**
@@ -63,7 +98,6 @@ const Form: React.FC<FormProps> = ({ formFields }) => {
    */
   const handleCloseModal = (e: any) => {
     e.preventDefault();
-    console.log('e:', e);
     setOpenModal(false);
   };
 
@@ -82,6 +116,7 @@ const Form: React.FC<FormProps> = ({ formFields }) => {
    */
   const fields = formFields.map((field: any, index: number) =>
     useMemo<JSX.Element>(() => {
+      const fieldName: string = field.label.toLowerCase().replace(' ', '');
       return (
         <Input
           key={index}
@@ -91,11 +126,17 @@ const Form: React.FC<FormProps> = ({ formFields }) => {
           placeholder={field.placeholder}
           options={field?.options}
           onChange={(e) => {
-            handleChange(e, field.label.toLowerCase().replace(' ', ''));
+            handleChange(e, fieldName);
           }}
+          // @ts-ignore
+          error={errors[fieldName]} // Pass down the error
         />
       );
-    }, [employee[field.label.toLowerCase().replace(' ', '')]])
+    }, [
+      employee[field.label.toLowerCase().replace(' ', '')],
+      // @ts-ignore
+      errors[field.label.toLowerCase().replace(' ', '')]
+    ])
   );
 
   return (

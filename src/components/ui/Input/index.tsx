@@ -33,6 +33,7 @@ const Input: React.FC<InputProps> = ({
   type,
   value,
   onChange,
+  error,
   ...props
 }) => {
   // variable to hold the JSX content based on the type of input
@@ -105,7 +106,12 @@ const Input: React.FC<InputProps> = ({
     );
   }
 
-  return <>{content}</>;
+  return (
+    <>
+      {content}
+      {error && <div className="text-red-500 text-sm">{error}</div>}
+    </>
+  );
 };
 
 export default Input;

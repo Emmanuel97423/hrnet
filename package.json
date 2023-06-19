@@ -18,7 +18,8 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.1",
     "react-table": "^7.8.0",
-    "regenerator-runtime": "^0.13.11"
+    "regenerator-runtime": "^0.13.11",
+    "yup": "^1.2.0"
   },
   "devDependencies": {
     "@types/node": "^20.1.0",
