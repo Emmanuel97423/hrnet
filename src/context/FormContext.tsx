@@ -27,6 +27,11 @@ type State = {
   employees: Employee[];
 };
 
+type ActionResult = {
+  message: string;
+  error: number;
+};
+
 // Retrieving the employees data from local storage
 const employees = localStorage.getItem('employees');
 const storage: Employee[] = employees ? JSON.parse(employees) : [];
@@ -82,13 +87,36 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
   const [state, dispatch] = useReducer(appReducer, initialState);
 
   // Function to dispatch ADD_EMPLOYEE action
-  const addEmployee: (employee: Employee) => void | undefined = (
+  const addEmployee: (employee: Employee) => ActionResult = (
     employee: Employee
   ) => {
-    dispatch({
-      type: 'ADD_EMPLOYEE',
-      payload: employee
-    });
+    // Check if the employee already exists
+    const employeeExists = state.employees.some(
+      (emp) =>
+        emp.firstname?.toLowerCase() === employee.firstname?.toLowerCase() &&
+        emp.lastname?.toLowerCase() === employee.lastname?.toLowerCase()
+    );
+
+    if (!employeeExists) {
+      // If employee doesn't exist, add it
+      dispatch({
+        type: 'ADD_EMPLOYEE',
+        payload: employee
+      });
+      return {
+        message: 'Employee saved',
+        error: 0
+      };
+    } else {
+      // If employee exists, do not add it and log a message (you could also show a user-friendly error message here)
+      // console.log(
+      //   `Employee with name ${employee.firstname} ${employee.lastname} already exists.`
+      // );
+      return {
+        message: `Employee with name ${employee.firstname} ${employee.lastname} already exists.`,
+        error: 1
+      };
+    }
   };
 
   return (

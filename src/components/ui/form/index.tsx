@@ -13,6 +13,11 @@ import type { Employee } from '@/types/employee';
 import type { FormProps } from '@/types/form';
 import * as yup from 'yup';
 
+type ActionResult = {
+  message: string;
+  error: number;
+};
+
 /**
  * Form Component
  *
@@ -26,6 +31,7 @@ import * as yup from 'yup';
 const Form: React.FC<FormProps> = ({ formFields }) => {
   const { addEmployee } = useContext(FormContext);
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<string>('');
   const [employee, setEmployee] = useState<Employee & Record<string, any>>({});
   // New state for validation errors
   const [errors, setErrors] = useState({});
@@ -81,11 +87,21 @@ const Form: React.FC<FormProps> = ({ formFields }) => {
       // Try to validate the form data against the schema
       await validationSchema.validate(employee);
       // If successful, add employee
-      // @ts-ignore
-      addEmployee(employee);
-      setEmployee({});
+      try {
+        // @ts-ignore
 
-      handleModal(e);
+        const result: ActionResult = addEmployee(employee);
+        if (result.error == 1) {
+          setModalMessage(`${result.message}`);
+          handleModal(e);
+          return;
+        }
+        setEmployee({});
+        setModalMessage(`${result.message}`);
+        handleModal(e);
+      } catch (error) {
+        console.log('error:', error);
+      }
     } catch (err) {
       // If validation fails, update errors state
       // @ts-ignore
@@ -154,7 +170,7 @@ const Form: React.FC<FormProps> = ({ formFields }) => {
           handleCloseModal={handleCloseModal}
           handleModal={handleModal}
         >
-          Employee Saved!
+          {modalMessage}
         </Modal>
       </form>
     </>
