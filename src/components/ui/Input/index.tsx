@@ -82,6 +82,7 @@ const Input: React.FC<InputProps> = ({
           className="border-2 border-gray-300 rounded-md p-2 w-full"
           name={label.toLocaleLowerCase().replace(' ', '')}
           onChange={onChange}
+          value={value}
         >
           <option value="">Select {label}</option>
           {props.options?.map((option) => (

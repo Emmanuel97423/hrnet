@@ -16,31 +16,37 @@ const Home: React.FC = () => {
       label: 'First Name',
       type: 'text',
       placeholder: 'First Name'
+      // value: ''
     },
     {
       label: 'Last Name',
       type: 'text',
       placeholder: 'Last Name'
+      // value: ''
     },
     {
       label: 'Birthday',
       type: 'date',
       placeholder: 'Date of Birth'
+      // value: ''
     },
     {
       label: 'Start',
       type: 'date',
       placeholder: 'Start'
+      // value: ''
     },
     {
       label: 'Street',
       type: 'text',
       placeholder: 'Street'
+      // value: ''
     },
     {
       label: 'City',
       type: 'text',
       placeholder: 'City'
+      // value: ''
     },
     {
       label: 'State',
@@ -284,11 +290,13 @@ const Home: React.FC = () => {
           abbreviation: 'WY'
         }
       ]
+      // value: ''
     },
     {
       label: 'Zip code',
       type: 'number',
       placeholder: 'Zip Code'
+      // value: ''
     },
     {
       label: 'Department',
@@ -301,6 +309,7 @@ const Home: React.FC = () => {
         { name: 'Human Resources', abbreviation: 'Human Resources' },
         { name: 'Legal', abbreviation: 'Legal' }
       ]
+      // value: ''
     }
   ];
 

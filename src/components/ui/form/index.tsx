@@ -83,6 +83,8 @@ const Form: React.FC<FormProps> = ({ formFields }) => {
       // If successful, add employee
       // @ts-ignore
       addEmployee(employee);
+      setEmployee({});
+
       handleModal(e);
     } catch (err) {
       // If validation fails, update errors state
@@ -114,30 +116,26 @@ const Form: React.FC<FormProps> = ({ formFields }) => {
   /**
    * Create form fields
    */
-  const fields = formFields.map((field: any, index: number) =>
-    useMemo<JSX.Element>(() => {
-      const fieldName: string = field.label.toLowerCase().replace(' ', '');
-      return (
-        <Input
-          key={index}
-          name={field.label.toLowerCase().replace(' ', '')}
-          label={field.label}
-          type={field.type}
-          placeholder={field.placeholder}
-          options={field?.options}
-          onChange={(e) => {
-            handleChange(e, fieldName);
-          }}
-          // @ts-ignore
-          error={errors[fieldName]} // Pass down the error
-        />
-      );
-    }, [
-      employee[field.label.toLowerCase().replace(' ', '')],
-      // @ts-ignore
-      errors[field.label.toLowerCase().replace(' ', '')]
-    ])
-  );
+  const fields = formFields.map((field: any, index: number) => {
+    const fieldName: string = field.label.toLowerCase().replace(' ', '');
+
+    return (
+      <Input
+        key={index}
+        name={field.label.toLowerCase().replace(' ', '')}
+        label={field.label}
+        type={field.type}
+        placeholder={field.placeholder}
+        options={field?.options}
+        onChange={(e) => {
+          handleChange(e, fieldName);
+        }}
+        value={employee[field.label.toLowerCase().replace(' ', '')] || ''}
+        // @ts-ignore
+        error={errors[fieldName]} // Pass down the error
+      />
+    );
+  });
 
   return (
     <>
